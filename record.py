@@ -5,7 +5,7 @@ import datetime
 
 from uberAPI import requestUberData
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, exists
 from sqlalchemy.orm import sessionmaker
 from database_schema import Base, Locations, RideData
 
@@ -48,11 +48,52 @@ def pullRecordUber(startLoc, endLoc):
     for items in uberServices:
         currentData = requestUberData(items, start_location.latitude, start_location.longitude, \
             end_location.latitude, end_location.longitude)
-        if currentData['minimum'] == None:
-            addUberPOOLFareEstimate(start_location.id, end_location.id, currentData['surge'], \
-                currentData['highEstimate'], currentData['lowEstimate'], currentData['estimate'], \
-                currentData['distance'], items)
-        elif currentData['estimate'] == None:
-            addFareEstimate(start_location.id, end_location.id, currentData['surge'], \
-                currentData['highEstimate'], currentData['lowEstimate'], currentData['minimum'], \
-                currentData['distance'], items)
+        if checkForFareChange(start_location.id, end_location.id, items, currentData):
+            if currentData['minimum'] == None:
+                addUberPOOLFareEstimate(start_location.id, end_location.id, currentData['surge'], \
+                    currentData['highEstimate'], currentData['lowEstimate'], currentData['estimate'], \
+                    currentData['distance'], items)
+            elif currentData['estimate'] == None:
+                addFareEstimate(start_location.id, end_location.id, currentData['surge'], \
+                    currentData['highEstimate'], currentData['lowEstimate'], currentData['minimum'], \
+                    currentData['distance'], items)
+
+def checkForFareChange(startLocID, endLocID, strService, currentFare):
+    if checkForPreviousEntry(startLocID, endLocID, strService):
+        lastFare = session.query(RideData).filter(RideData.service == strService) \
+        .filter(RideData.start_location_id == startLocID).filter(RideData.end_location_id == endLocID) \
+        .order_by(RideData.id.desc()).first()
+
+        if strService == 'uberPOOL':
+            if (lastFare.surge != currentFare['surge'] or lastFare.highEstimate != currentFare['highEstimate'] or \
+                lastFare.lowEstimate != currentFare['lowEstimate'] or lastFare.estimate != currentFare['estimate']):
+                    return True
+            else:
+                    return False
+        else:
+            if (lastFare.surge != currentFare['surge'] or lastFare.highEstimate != currentFare['highEstimate'] or \
+                lastFare.lowEstimate != currentFare['lowEstimate'] or lastFare.minimum != currentFare['minimum']):
+                    return True
+            else:
+                    return False
+    else:
+        return True
+
+def checkForPreviousEntry(startLocID, endLocID, strService):
+    check = session.query(exists().where(RideData.service == strService) \
+        .where(RideData.start_location_id == startLocID) \
+        .where(RideData.end_location_id == endLocID)).scalar()
+    return check
+
+
+#############################################################################################
+start_location = session.query(Locations).filter(Locations.name == 'jb3').one()
+end_location = session.query(Locations).filter(Locations.name == 'Buckhead').one()
+
+
+#currentData = requestUberData('uberPOOL', start_location.latitude, start_location.longitude, \
+        #end_location.latitude, end_location.longitude)
+
+#print fareChanged(start_location.id, end_location.id, 'uberPOOL', currentData)
+
+
