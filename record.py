@@ -86,14 +86,3 @@ def checkForPreviousEntry(startLocID, endLocID, strService):
     return check
 
 
-#############################################################################################
-start_location = session.query(Locations).filter(Locations.name == 'jb3').one()
-end_location = session.query(Locations).filter(Locations.name == 'Buckhead').one()
-
-
-#currentData = requestUberData('uberPOOL', start_location.latitude, start_location.longitude, \
-        #end_location.latitude, end_location.longitude)
-
-#print fareChanged(start_location.id, end_location.id, 'uberPOOL', currentData)
-
-
