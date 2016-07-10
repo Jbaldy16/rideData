@@ -1,5 +1,5 @@
 #! /bin/bash
 cd rideData   
-source ~/env/bin/activate
+source ./env/bin/activate
 
 python manager.py
