@@ -63,7 +63,6 @@ def checkForFareChange(startLocID, endLocID, strService, currentFare):
         lastFare = session.query(RideData).filter(RideData.service == strService) \
         .filter(RideData.start_location_id == startLocID).filter(RideData.end_location_id == endLocID) \
         .order_by(RideData.id.desc()).first()
-
         if strService == 'uberPOOL':
             if (lastFare.surge != currentFare['surge'] or lastFare.highEstimate != currentFare['highEstimate'] or \
                 lastFare.lowEstimate != currentFare['lowEstimate'] or lastFare.estimate != currentFare['estimate']):
