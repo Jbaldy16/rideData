@@ -69,5 +69,5 @@ Thumbs.db
 # SQLite DB files
 *.db
 
-# Ignore Tokens
-tokens.py
+# Ignore Settings
+settings.py

@@ -1,10 +1,10 @@
+import settings
 from uber_rides.session import Session
 from uber_rides.client import UberRidesClient
 from tokens import getUberServerToken
 
 def requestUberData(strService, Lat1, Long1, Lat2, Long2):
-	uber_server_token = getUberServerToken('jb3')
-	session = Session(server_token=uber_server_token)
+	session = Session(server_token=settings.UBER_SERVER_TOKEN)
 	client = UberRidesClient(session)
 	response = client.get_price_estimates(Lat1, Long1, Lat2, Long2)
 	prices = response.json.get('prices')
