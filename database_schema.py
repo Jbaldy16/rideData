@@ -1,9 +1,11 @@
 import sqlite3
 import sys
+import settings
 
 from sqlalchemy import create_engine
+from sqlalchemy.engine.url import URL
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, Float, DATETIME, ForeignKey
+from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 
 Base = declarative_base()
@@ -15,14 +17,25 @@ class Locations(Base):
     latitude = Column(Float, nullable=False)
     longitude = Column(Float, nullable=False)
     name = Column(String, nullable=False)
+    start_route = relationship("Routes", backref="start_location")
+    end_route = relationship("Routes", backref="end_location")
+    start_ride = relationship("RideData", backref="start_location")
+    end_ride = relationship("RideData", backref="end_location")
 
+class Routes(Base):
+    __tablename__ = "routes"
+
+    id = Column(Integer, primary_key=True)
+    start_location_id = Column(Integer, ForeignKey('locations.id'), nullable=False)
+    end_location_id = Column(Integer, ForeignKey('locations.id'), nullable=False)
+    name = Column(String, nullable=True)
 
 class RideData(Base):
     __tablename__ = "rideData"
  
     id = Column(Integer, primary_key=True)
     start_location_id = Column(Integer, ForeignKey('locations.id'), nullable=False)
-    end_location_id = Column(Integer, ForeignKey('locations.id'), nullable=False)   
+    end_location_id = Column(Integer, ForeignKey('locations.id'), nullable=False)
     surge = Column(Float, nullable=False)
     highEstimate = Column(Float, nullable=False)
     lowEstimate = Column(Float, nullable=False)
@@ -30,8 +43,9 @@ class RideData(Base):
     estimate = Column(Float, nullable=True)
     distance = Column(Float, nullable=False) 
     service = Column(String, nullable=False)
-    datetime = Column(DATETIME, nullable=False)
+    datetime = Column(DateTime, nullable=False)
 
 engine = create_engine('sqlite:///RIDEDATA.db')
+#engine = create_engine(URL(**settings.DATABASE))
 
 Base.metadata.create_all(engine)

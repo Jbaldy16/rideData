@@ -1,0 +1,6 @@
+PyYAML==3.11
+SQLAlchemy==1.0.14
+psycopg2==2.6.2
+requests==2.10.0
+uber-rides==0.2.4
+wsgiref==0.1.2

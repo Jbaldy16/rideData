@@ -1,7 +1,6 @@
 import settings
 from uber_rides.session import Session
 from uber_rides.client import UberRidesClient
-from tokens import getUberServerToken
 
 def requestUberData(strService, Lat1, Long1, Lat2, Long2):
 	session = Session(server_token=settings.UBER_SERVER_TOKEN)

@@ -63,8 +63,8 @@ target/
 ehthumbs.db
 Thumbs.db
 
-# Test files
-*.txt
+# Location files
+locations.txt
 
 # SQLite DB files
 *.db
