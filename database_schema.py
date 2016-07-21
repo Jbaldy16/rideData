@@ -17,18 +17,18 @@ class Locations(Base):
     latitude = Column(Float, nullable=False)
     longitude = Column(Float, nullable=False)
     name = Column(String, nullable=False)
-    start_route = relationship("Routes", backref="start_location")
-    end_route = relationship("Routes", backref="end_location")
-    start_ride = relationship("RideData", backref="start_location")
-    end_ride = relationship("RideData", backref="end_location")
+    #start_route = relationship("Routes", backref="start_location")
+    #end_route = relationship("Routes", backref="end_location")
+    #start_ride = relationship("RideData", backref="start_location")
+    #end_ride = relationship("RideData", backref="end_location")
 
-class Routes(Base):
-    __tablename__ = "routes"
+#class Routes(Base):
+    #__tablename__ = "routes"
 
-    id = Column(Integer, primary_key=True)
-    start_location_id = Column(Integer, ForeignKey('locations.id'), nullable=False)
-    end_location_id = Column(Integer, ForeignKey('locations.id'), nullable=False)
-    name = Column(String, nullable=True)
+    #id = Column(Integer, primary_key=True)
+    #start_location_id = Column(Integer, ForeignKey('locations.id'), nullable=False)
+    #end_location_id = Column(Integer, ForeignKey('locations.id'), nullable=False)
+    #name = Column(String, nullable=True)
 
 class RideData(Base):
     __tablename__ = "rideData"
