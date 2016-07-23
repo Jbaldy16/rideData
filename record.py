@@ -7,10 +7,9 @@ from uberAPI import requestUberData
 
 from sqlalchemy import create_engine, exists
 from sqlalchemy.orm import sessionmaker
-from database_schema import Base, Locations, RideData
+from database_schema import Locations, RideData, db_connect
 
-engine = create_engine('sqlite:///RIDEDATA.db')
-Base.metadata.bind = engine
+engine = db_connect()
  
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
