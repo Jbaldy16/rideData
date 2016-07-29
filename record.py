@@ -36,7 +36,7 @@ def addUberPOOLFareEstimate(start, end, newSurge, newHigh, newLow, newEstimate, 
     session.commit()
 
 def pullRecordUber(startLoc, endLoc):
-    uberServices = ['uberPOOL', s
+    uberServices = ['uberPOOL',
     'uberX', 
     'uberXL', 
     'uberSELECT', 
