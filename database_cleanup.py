@@ -6,7 +6,7 @@ import database_schema_v2
 def updateDateTime(session):
 	rideData_records = session.query(database_schema_v2.RideData).all()
 	for record in rideData_records:
-		record.timestamp += datetime.timedelta(hours=4)
+		record.timestamp -= datetime.timedelta(hours=4)
 		session.commit()
 
 def addRoundedTime(session):
