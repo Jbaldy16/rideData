@@ -1,7 +1,6 @@
 import settings
 
 from sqlalchemy import create_engine
-from sqlalchemy.engine.url import URL
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey
 
@@ -44,10 +43,11 @@ class RideData(Base):
     duration = Column(Float, nullable=True)
     riders = Column(Integer, nullable=True)
     service = Column(String, nullable=False)
-    datetime = Column(DateTime, nullable=False)
+    timestamp = Column(DateTime, nullable=False)
+    timestamp_interval = Column(DateTime, nullable=True)
 
-def db_connect():
-    return create_engine(URL(**settings.AWS_DATABASE))
+def db_connect(DATABASE_NAME):
+    return create_engine(DATABASE_NAME)
 
 def db_create(engine):
     Base.metadata.create_all(engine)

@@ -28,6 +28,7 @@ def requestUberData(strService, Lat1, Long1, Lat2, Long2):
 	highEstimate = float(uberService['high_estimate'])
 	lowEstimate = float(uberService['low_estimate'])
 	distance = float(uberService['distance'])
+	duration = float(uberService['duration'])
 	surge = float(uberService['surge_multiplier'])
 
 	if strService != "uberPOOL":
@@ -38,6 +39,7 @@ def requestUberData(strService, Lat1, Long1, Lat2, Long2):
 		estimate = float(uberService['estimate'][1:])
 
 	uberData = {'highEstimate': highEstimate, 'lowEstimate': lowEstimate, \
-		'minimum': minimum, 'estimate': estimate, 'distance': distance, 'surge': surge}
+		'minimum': minimum, 'estimate': estimate, 'distance': distance, \
+		'duration': duration, 'surge': surge}
 
 	return uberData

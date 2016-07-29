@@ -1,15 +1,15 @@
-
-import sqlite3
-import sys
 import datetime
+import settings
 
 from uberAPI import requestUberData
+from database_cleanup import roundTime
 
 from sqlalchemy import create_engine, exists
 from sqlalchemy.orm import sessionmaker
-from database_schema import Locations, RideData
+from sqlalchemy.engine.url import URL
+from database_schema_v2 import Locations, RideData
 
-engine = create_engine('sqlite:///RIDEDATA.db')
+engine = create_engine(URL(**settings.AWS_DATABASE))
  
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
@@ -19,17 +19,19 @@ def addLocation(newLat, newLong, newName):
     session.add(new_location)
     session.commit()
 
-def addFareEstimate(start, end, newSurge, newHigh, newLow, newMin, newDistance, newService):
+def addFareEstimate(start, end, newSurge, newHigh, newLow, newMin, newDistance, newDuration, newService):
     new_fare_estimate = RideData(start_location_id=start, end_location_id=end, surge=newSurge, \
         highEstimate=newHigh, lowEstimate=newLow, minimum=newMin, distance=newDistance, \
-        service=newService, datetime = datetime.datetime.now())
+        service=newService, duration=newDuration, timestamp = datetime.datetime.now(), \
+        timestamp_interval= roundTime(datetime.datetime.now()))
     session.add(new_fare_estimate)
     session.commit()
 
-def addUberPOOLFareEstimate(start, end, newSurge, newHigh, newLow, newEstimate, newDistance, newService):
+def addUberPOOLFareEstimate(start, end, newSurge, newHigh, newLow, newEstimate, newDistance, newDuration, newService):
     new_fare_estimate = RideData(start_location_id=start, end_location_id=end, surge=newSurge, \
         highEstimate=newHigh, lowEstimate=newLow, estimate=newEstimate, distance=newDistance, \
-        service=newService, datetime = datetime.datetime.now())
+        service=newService, duration=newDuration, timestamp = datetime.datetime.now(), \
+        timestamp_interval= roundTime(datetime.datetime.now()))
     session.add(new_fare_estimate)
     session.commit()
 
@@ -51,11 +53,11 @@ def pullRecordUber(startLoc, endLoc):
             if currentData['minimum'] == None:
                 addUberPOOLFareEstimate(start_location.id, end_location.id, currentData['surge'], \
                     currentData['highEstimate'], currentData['lowEstimate'], currentData['estimate'], \
-                    currentData['distance'], items)
+                    currentData['distance'], currentData['duration'], items)
             elif currentData['estimate'] == None:
                 addFareEstimate(start_location.id, end_location.id, currentData['surge'], \
                     currentData['highEstimate'], currentData['lowEstimate'], currentData['minimum'], \
-                    currentData['distance'], items)
+                    currentData['distance'], currentData['duration'], items)
 
 def checkForFareChange(startLocID, endLocID, strService, currentFare):
     if checkForPreviousEntry(startLocID, endLocID, strService):

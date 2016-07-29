@@ -70,4 +70,5 @@ locations.txt
 *.db
 
 # Ignore Settings
+awsUpdate.sh
 settings.py
