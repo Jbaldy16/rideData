@@ -22,7 +22,7 @@ def addLocation(newLat, newLong, newName):
 def addFareEstimate(start, end, newSurge, newHigh, newLow, newMin, newDistance, newDuration, newService):
     new_fare_estimate = RideData(start_location_id=start, end_location_id=end, surge=newSurge, \
         highEstimate=newHigh, lowEstimate=newLow, minimum=newMin, distance=newDistance, \
-        service=newService, duration=newDuration, timestamp = datetime.datetime.now(), \
+        service=newService, duration=newDuration, timestamp = (datetime.datetime.now() + datetime.timedelta(hours=4)), \
         timestamp_interval= roundTime(datetime.datetime.now()))
     session.add(new_fare_estimate)
     session.commit()
@@ -30,13 +30,13 @@ def addFareEstimate(start, end, newSurge, newHigh, newLow, newMin, newDistance, 
 def addUberPOOLFareEstimate(start, end, newSurge, newHigh, newLow, newEstimate, newDistance, newDuration, newService):
     new_fare_estimate = RideData(start_location_id=start, end_location_id=end, surge=newSurge, \
         highEstimate=newHigh, lowEstimate=newLow, estimate=newEstimate, distance=newDistance, \
-        service=newService, duration=newDuration, timestamp = datetime.datetime.now(), \
+        service=newService, duration=newDuration, timestamp = (datetime.datetime.now() + datetime.timedelta(hours=4)), \
         timestamp_interval= roundTime(datetime.datetime.now()))
     session.add(new_fare_estimate)
     session.commit()
 
 def pullRecordUber(startLoc, endLoc):
-    uberServices = ['uberPOOL', 
+    uberServices = ['uberPOOL', s
     'uberX', 
     'uberXL', 
     'uberSELECT', 
