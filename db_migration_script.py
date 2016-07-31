@@ -1,23 +1,21 @@
 import settings
 
+import datetime
+from pytz import timezone
+
 from database_schema_v2 import db_create, db_connect
 from database_migration import transferLocations, transferRideData
-from database_cleanup import updateDateTime, addRoundedTime
 
 from sqlalchemy import create_engine
 from sqlalchemy.engine.url import URL
 from sqlalchemy.orm import sessionmaker
 
-# DataBase Cleanup Setup
-db_TO_BE_CLEANED = URL(**settings.AWS_DATABASE)
-
-engine = create_engine(db_TO_BE_CLEANED)
-session = sessionmaker(bind=engine)()
-# End
 
 # DataBase Migration Setup
 db_transfer_FROM = 'sqlite:///RIDEDATA.db'
 db_transfer_TO = URL(**settings.AWS_DATABASE)
+
+startTimezone = timezone('US/Eastern')
 
 databases = [db_transfer_FROM,
     db_transfer_TO]
@@ -31,13 +29,9 @@ for dbconninfo in databases:
 # End
 
 # Create New Database
-#db_create(db_connect(URL(**settings.AWS_DATABASE)))
+db_create(db_connect(URL(**settings.AWS_DATABASE)))
 # Migrate Data
 transferLocations(sessions)
-#transferRideData(sessions)
-# Cleanup Data
-#updateDateTime(session)
-#addRoundedTime(session)
+transferRideData(sessions, startTimezone)
 print "Success"
-
 # End

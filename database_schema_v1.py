@@ -1,5 +1,3 @@
-import sqlite3
-import sys
 import settings
 
 from sqlalchemy import create_engine

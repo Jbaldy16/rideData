@@ -1,37 +1,43 @@
-import datetime
 import settings
 
+import datetime
+from pytz import timezone
+
 from uberAPI import requestUberData
-from database_cleanup import roundTime
+from database_cleanup import roundTime, defineUTC
+from database_schema_v2 import Locations, RideData
 
 from sqlalchemy import create_engine, exists
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.engine.url import URL
-from database_schema_v2 import Locations, RideData
 
 engine = create_engine(URL(**settings.AWS_DATABASE))
  
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
-def addLocation(newLat, newLong, newName):
-    new_location = Locations(latitude=newLat, longitude=newLong, name=newName)
+def addLocation(newLat, newLong, newName, locTimezone):
+    new_location = Locations(latitude=newLat, longitude=newLong, name=newName, timezone=locTimezone)
     session.add(new_location)
     session.commit()
 
-def addFareEstimate(start, end, newSurge, newHigh, newLow, newMin, newDistance, newDuration, newService):
+def addFareEstimate(start, end, newSurge, newHigh, newLow, newMin, newDistance, newDuration, newService, startTimezone):
+    utc_time = defineUTC(datetime.datetime.utcnow())
     new_fare_estimate = RideData(start_location_id=start, end_location_id=end, surge=newSurge, \
         highEstimate=newHigh, lowEstimate=newLow, minimum=newMin, distance=newDistance, \
-        service=newService, duration=newDuration, timestamp = (datetime.datetime.now() + datetime.timedelta(hours=-4)), \
-        timestamp_interval= roundTime(datetime.datetime.now()))
+        service=newService, duration=newDuration, timestamp = utc_time , \
+        timestamp_interval=defineUTC(roundTime(datetime.datetime.utcnow())), \
+        timestamp_interval_EST=roundTime(datetime.datetime.utcnow())+datetime.timedelta(hours=-4))
     session.add(new_fare_estimate)
     session.commit()
 
-def addUberPOOLFareEstimate(start, end, newSurge, newHigh, newLow, newEstimate, newDistance, newDuration, newService):
+def addUberPOOLFareEstimate(start, end, newSurge, newHigh, newLow, newEstimate, newDistance, newDuration, newService, startTimezone):
+    utc_time = defineUTC(datetime.datetime.utcnow())
     new_fare_estimate = RideData(start_location_id=start, end_location_id=end, surge=newSurge, \
         highEstimate=newHigh, lowEstimate=newLow, estimate=newEstimate, distance=newDistance, \
-        service=newService, duration=newDuration, timestamp = (datetime.datetime.now() + datetime.timedelta(hours=-4)), \
-        timestamp_interval= roundTime(datetime.datetime.now()))
+        service=newService, duration=newDuration, timestamp = utc_time , \
+        timestamp_interval=defineUTC(roundTime(datetime.datetime.utcnow())), \
+        timestamp_interval_EST=roundTime(datetime.datetime.utcnow())+datetime.timedelta(hours=-4))
     session.add(new_fare_estimate)
     session.commit()
 
@@ -53,11 +59,11 @@ def pullRecordUber(startLoc, endLoc):
             if currentData['minimum'] == None:
                 addUberPOOLFareEstimate(start_location.id, end_location.id, currentData['surge'], \
                     currentData['highEstimate'], currentData['lowEstimate'], currentData['estimate'], \
-                    currentData['distance'], currentData['duration'], items)
+                    currentData['distance'], currentData['duration'], items, start_location.timezone)
             elif currentData['estimate'] == None:
                 addFareEstimate(start_location.id, end_location.id, currentData['surge'], \
                     currentData['highEstimate'], currentData['lowEstimate'], currentData['minimum'], \
-                    currentData['distance'], currentData['duration'], items)
+                    currentData['distance'], currentData['duration'], items, start_location.timezone)
 
 def checkForFareChange(startLocID, endLocID, strService, currentFare):
     if checkForPreviousEntry(startLocID, endLocID, strService):

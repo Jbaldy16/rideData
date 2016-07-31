@@ -13,6 +13,7 @@ class Locations(Base):
     latitude = Column(Float, nullable=False)
     longitude = Column(Float, nullable=False)
     name = Column(String, nullable=False)
+    timezone = Column(String, nullable=False)
 
 class Routes(Base):
     __tablename__ = "routes"
@@ -43,8 +44,9 @@ class RideData(Base):
     duration = Column(Float, nullable=True)
     riders = Column(Integer, nullable=True)
     service = Column(String, nullable=False)
-    timestamp = Column(DateTime, nullable=False)
-    timestamp_interval = Column(DateTime, nullable=True)
+    timestamp = Column(DateTime(True), nullable=False)
+    timestamp_interval = Column(DateTime(True), nullable=False)
+    timestamp_interval_EST = Column(DateTime, nullable=True)
 
 def db_connect(DATABASE_NAME):
     return create_engine(DATABASE_NAME)
