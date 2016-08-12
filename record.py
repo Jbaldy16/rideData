@@ -69,6 +69,9 @@ def pullRecordUber(startLoc, endLoc):
     for items in uberServices:
         currentData = requestUberData(items, start_location.latitude, start_location.longitude, \
             end_location.latitude, end_location.longitude)
+        addUberX(start_location.id, end_location.id, currentData['surge'], \
+            currentData['highEstimate'], currentData['lowEstimate'], currentData['minimum'], \
+            currentData['distance'], currentData['duration'], start_location.timezone)
         if checkForFareChange(start_location.id, end_location.id, items, currentData):
             if currentData['minimum'] == None:
                 addUberPOOLFareEstimate(start_location.id, end_location.id, currentData['surge'], \
