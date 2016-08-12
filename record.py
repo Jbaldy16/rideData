@@ -5,7 +5,7 @@ from pytz import timezone
 
 from uberAPI import requestUberData
 from database_cleanup import roundTime, defineUTC
-from database_schema_v2 import Locations, RideData
+from database_schema import Locations, RideData, UberXData
 
 from sqlalchemy import create_engine, exists
 from sqlalchemy.orm import sessionmaker
@@ -26,6 +26,16 @@ def addFareEstimate(start, end, newSurge, newHigh, newLow, newMin, newDistance, 
     new_fare_estimate = RideData(start_location_id=start, end_location_id=end, surge=newSurge, \
         highEstimate=newHigh, lowEstimate=newLow, minimum=newMin, distance=newDistance, \
         service=newService, duration=newDuration, timestamp = utc_time , \
+        timestamp_interval=defineUTC(roundTime(datetime.datetime.utcnow())), \
+        timestamp_interval_EST=roundTime(datetime.datetime.utcnow())+datetime.timedelta(hours=-4))
+    session.add(new_fare_estimate)
+    session.commit()
+
+def addUberX(start, end, newSurge, newHigh, newLow, newMin, newDistance, newDuration, startTimezone):
+    utc_time = defineUTC(datetime.datetime.utcnow())
+    new_fare_estimate = UberXData(start_location_id=start, end_location_id=end, surge=newSurge, \
+        highEstimate=newHigh, lowEstimate=newLow, minimum=newMin, distance=newDistance, \
+        duration=newDuration, timestamp = utc_time , \
         timestamp_interval=defineUTC(roundTime(datetime.datetime.utcnow())), \
         timestamp_interval_EST=roundTime(datetime.datetime.utcnow())+datetime.timedelta(hours=-4))
     session.add(new_fare_estimate)
@@ -52,6 +62,10 @@ def pullRecordUber(startLoc, endLoc):
     start_location = session.query(Locations).filter(Locations.name == startLoc).one()
     end_location = session.query(Locations).filter(Locations.name == endLoc).one()
 
+    addUberX(start_location.id, end_location.id, currentData['surge'], \
+        currentData['highEstimate'], currentData['lowEstimate'], currentData['minimum'], \
+        currentData['distance'], currentData['duration'], start_location.timezone)
+
     for items in uberServices:
         currentData = requestUberData(items, start_location.latitude, start_location.longitude, \
             end_location.latitude, end_location.longitude)
@@ -64,6 +78,17 @@ def pullRecordUber(startLoc, endLoc):
                 addFareEstimate(start_location.id, end_location.id, currentData['surge'], \
                     currentData['highEstimate'], currentData['lowEstimate'], currentData['minimum'], \
                     currentData['distance'], currentData['duration'], items, start_location.timezone)
+
+def pullUberX(startLoc, endLoc):
+    start_location = session.query(Locations).filter(Locations.name == startLoc).one()
+    end_location = session.query(Locations).filter(Locations.name == endLoc).one()
+
+    currentData = requestUberData("uberX", start_location.latitude, start_location.longitude, \
+        end_location.latitude, end_location.longitude)
+
+    addUberX(start_location.id, end_location.id, currentData['surge'], \
+        currentData['highEstimate'], currentData['lowEstimate'], currentData['minimum'], \
+        currentData['distance'], currentData['duration'], start_location.timezone)
 
 def checkForFareChange(startLocID, endLocID, strService, currentFare):
     if checkForPreviousEntry(startLocID, endLocID, strService):

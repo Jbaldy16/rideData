@@ -1,8 +1,10 @@
 import settings
+import settings
 
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey
+from sqlalchemy.engine.url import URL
 
 Base = declarative_base()
 
@@ -44,6 +46,22 @@ class RideData(Base):
     duration = Column(Float, nullable=True)
     riders = Column(Integer, nullable=True)
     service = Column(String, nullable=False)
+    timestamp = Column(DateTime(True), nullable=False)
+    timestamp_interval = Column(DateTime(True), nullable=False)
+    timestamp_interval_EST = Column(DateTime, nullable=True)
+
+class UberXData(Base):
+    __tablename__ = "uberXData"
+ 
+    id = Column(Integer, primary_key=True)
+    start_location_id = Column(Integer, ForeignKey('locations.id'), nullable=False)
+    end_location_id = Column(Integer, ForeignKey('locations.id'), nullable=False)
+    surge = Column(Float, nullable=False)
+    highEstimate = Column(Float, nullable=False)
+    lowEstimate = Column(Float, nullable=False)
+    minimum = Column(Float, nullable=True)
+    distance = Column(Float, nullable=False) 
+    duration = Column(Float, nullable=True)
     timestamp = Column(DateTime(True), nullable=False)
     timestamp_interval = Column(DateTime(True), nullable=False)
     timestamp_interval_EST = Column(DateTime, nullable=True)
