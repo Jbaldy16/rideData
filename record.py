@@ -62,10 +62,6 @@ def pullRecordUber(startLoc, endLoc):
     start_location = session.query(Locations).filter(Locations.name == startLoc).one()
     end_location = session.query(Locations).filter(Locations.name == endLoc).one()
 
-    addUberX(start_location.id, end_location.id, currentData['surge'], \
-        currentData['highEstimate'], currentData['lowEstimate'], currentData['minimum'], \
-        currentData['distance'], currentData['duration'], start_location.timezone)
-
     for items in uberServices:
         currentData = requestUberData(items, start_location.latitude, start_location.longitude, \
             end_location.latitude, end_location.longitude)
