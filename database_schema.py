@@ -71,3 +71,5 @@ def db_connect(DATABASE_NAME):
 
 def db_create(engine):
     Base.metadata.create_all(engine)
+
+db_create(db_connect(URL(**settings.AWS_DATABASE)))
