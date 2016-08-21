@@ -11,9 +11,9 @@ def requestUberData(strService, Lat1, Long1, Lat2, Long2):
 	uberData = {}
 
 	if strService == "uberPOOL":
-		uberService = prices[0]
-	elif strService == "uberX":
 		uberService = prices[1]
+	elif strService == "uberX":
+		uberService = prices[0]
 	elif strService == "uberXL":
 		uberService = prices[2]
 	elif strService == "uberSELECT":
@@ -36,10 +36,11 @@ def requestUberData(strService, Lat1, Long1, Lat2, Long2):
 		estimate = None
 	else:
 		minimum = None
-		estimate = float(uberService['estimate'])
+		estimate = float(uberService['estimate'][1:])
 
 	uberData = {'highEstimate': highEstimate, 'lowEstimate': lowEstimate, \
 		'minimum': minimum, 'estimate': estimate, 'distance': distance, \
 		'duration': duration, 'surge': surge}
 
 	return uberData
+
