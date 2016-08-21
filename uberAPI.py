@@ -36,7 +36,7 @@ def requestUberData(strService, Lat1, Long1, Lat2, Long2):
 		estimate = None
 	else:
 		minimum = None
-		estimate = float(uberService['estimate'][1:])
+		estimate = float(uberService['estimate'])
 
 	uberData = {'highEstimate': highEstimate, 'lowEstimate': lowEstimate, \
 		'minimum': minimum, 'estimate': estimate, 'distance': distance, \
