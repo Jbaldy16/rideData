@@ -148,6 +148,6 @@ def addUberXRecord(recordClass, interval=None):
 
 #interpolateUberXRecords('jb3', 'Buckhead')
 
-initUberXMedianTable(session, 'jb3', 'Buckhead')
+initUberXMedianTable('jb3', 'Buckhead')
 
 #initDayTimeIntervalTable(session)
