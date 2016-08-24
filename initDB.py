@@ -146,12 +146,8 @@ def addUberXRecord(recordClass, interval=None):
 
 #Execute#
 
-interpolateUberXRecords('jb3', 'Buckhead')
+#interpolateUberXRecords('jb3', 'Buckhead')
 
-#initUberXMedianTable(session, 'jb3', 'Buckhead')
+initUberXMedianTable(session, 'jb3', 'Buckhead')
 
 #initDayTimeIntervalTable(session)
-
-#today = datetime.datetime.now()
-#print today.weekday()
-#print today.time()
