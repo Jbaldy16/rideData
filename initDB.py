@@ -36,7 +36,7 @@ def initUberXMedianTable(startLoc, endLoc):
 	start_location = session.query(Locations).filter(Locations.name == startLoc).one()
 	end_location = session.query(Locations).filter(Locations.name == endLoc).one()
 
-	uberX_records = DBsession.query(UberXData).filter(UberXData.start_location_id==start_location.id). \
+	uberX_records = session.query(UberXData).filter(UberXData.start_location_id==start_location.id). \
 		filter(UberXData.end_location_id==end_location.id)
 
 	for uberXEntry in uberX_records:
@@ -44,10 +44,10 @@ def initUberXMedianTable(startLoc, endLoc):
 		weekday_index = time_interval.weekday()
 		time = time_interval.time()
 
-		dayTimeInterval_record = DBsession.query(DayTimeIntervals).filter(DayTimeIntervals.day_index==weekday_index). \
+		dayTimeInterval_record = session.query(DayTimeIntervals).filter(DayTimeIntervals.day_index==weekday_index). \
 			filter(DayTimeIntervals.time_interval==time).first()
 
-		uberXMedian_record = DBsession.query(UberXMedian).filter(UberXMedian.day_time_interval_id==dayTimeInterval_record.id). \
+		uberXMedian_record = session.query(UberXMedian).filter(UberXMedian.day_time_interval_id==dayTimeInterval_record.id). \
 			filter(UberXMedian.start_location_id==start_location.id). \
 			filter(UberXMedian.end_location_id==end_location.id).first()
 
