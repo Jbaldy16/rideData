@@ -15,8 +15,6 @@ from sqlalchemy.orm import sessionmaker
 db_transfer_FROM = URL(**settings.AWS_DATABASE)
 db_transfer_TO = URL(**settings.AWS_TEST_DATABASE)
 
-startTimezone = timezone('US/Eastern')
-
 databases = [db_transfer_FROM,
     db_transfer_TO]
 
@@ -29,9 +27,11 @@ for dbconninfo in databases:
 # End
 
 # Create New Database
-db_create(db_connect(URL(**settings.AWS_TEST_DATABASE)))
+#db_create(db_connect(URL(**settings.AWS_TEST_DATABASE)))
 # Migrate Data
 #transferLocations(sessions)
-transferSample(sessions, startTimezone)
+transferRideData(sessions)
+#transferSample(sessions)
+
 print "Success"
 # End
