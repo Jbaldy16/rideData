@@ -48,6 +48,8 @@ def initUberXMeanTable(startLoc, endLoc):
 			filter(UberXMean.start_location_id==start_location.id). \
 			filter(UberXMean.end_location_id==end_location.id).first()
 
+		print uberXMean_record.id
+
 		if uberXMean_record == None:
 			# No current Mean records exists for that timestamp and route
 			new_uberX_mean = UberXMean(start_location_id=start_location.id, end_location_id=end_location.id, \
@@ -60,22 +62,16 @@ def initUberXMeanTable(startLoc, endLoc):
 		else:
 			# Update Surge
 			uberXMean_record.surge = averageData(uberXMean_record.surge, uberXMean_record.data_points, uberXEntry.surge)
-			session.commit()
 			# Update highEstimate
 			uberXMean_record.highEstimate = averageData(uberXMean_record.highEstimate, uberXMean_record.data_points, uberXEntry.highEstimate)
-			session.commit()
 			# Update lowEstimate
 			uberXMean_record.lowEstimate = averageData(uberXMean_record.lowEstimate, uberXMean_record.data_points, uberXEntry.lowEstimate)
-			session.commit()
 			# Update Minimum
 			uberXMean_record.minimum = averageData(uberXMean_record.minimum, uberXMean_record.data_points, uberXEntry.minimum)
-			session.commit()
 			# Update Distance
 			uberXMean_record.distance = averageData(uberXMean_record.distance, uberXMean_record.data_points, uberXEntry.distance)
-			session.commit()
 			# Update Duration
 			uberXMean_record.duration = averageData(uberXMean_record.duration, uberXMean_record.data_points, uberXEntry.duration)
-			session.commit()
 			# Update Data Points
 			uberXMean_record.data_points = uberXMean_record.data_points + 1
 			session.commit()

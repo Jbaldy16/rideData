@@ -28,7 +28,7 @@ for dbconninfo in databases:
 # End
 
 ## Create New Database
-#db_create(db_connect(URL(**settings.AWS_TEST_DATABASE)))
+db_create(db_connect(URL(**settings.AWS_TEST_DATABASE)))
 
 ## Migrate Data
 #transferLocations(sessions)

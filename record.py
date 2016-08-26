@@ -62,10 +62,10 @@ def pullRecordUber(startLoc, endLoc):
         currentData = requestUberData(items, start_location.latitude, start_location.longitude, \
             end_location.latitude, end_location.longitude)
 ######### Remove Block #########
-        if items == 'uberX':
-            addUberX(start_location.id, end_location.id, start_location.timezone, currentData['surge'], \
-                currentData['highEstimate'], currentData['lowEstimate'], currentData['minimum'], \
-                currentData['distance'], currentData['duration'])
+        #if items == 'uberX':
+            #addUberX(start_location.id, end_location.id, start_location.timezone, currentData['surge'], \
+                #currentData['highEstimate'], currentData['lowEstimate'], currentData['minimum'], \
+                #currentData['distance'], currentData['duration'])
 ######### Remove Block #########
         if checkForFareChange(start_location.id, end_location.id, items, currentData):
             if currentData['minimum'] == None:
