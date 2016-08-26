@@ -27,8 +27,13 @@ for dbconninfo in databases:
     sessions.append(sessionmaker(bind=current_engine)())
 # End
 
+#TODO
+# Update Settings
+# Delete UberXData Table
+# Push git version
+
 ## Create New Database
-db_create(db_connect(URL(**settings.AWS_TEST_DATABASE)))
+db_create(db_connect(URL(**settings.AWS_DATABASE)))
 
 ## Migrate Data
 #transferLocations(sessions)
@@ -36,13 +41,13 @@ db_create(db_connect(URL(**settings.AWS_TEST_DATABASE)))
 #transferSample(sessions)
 
 ## Init Day/Time Interval Tabl
-#initDayTimeIntervalTable()
+initDayTimeIntervalTable()
 
 ## Populate uberX Data Table
-#interpolateUberXRecords('jb3', 'Buckhead')
-#interpolateUberXRecords('jb3', 'theDUMP')
-#interpolateUberXRecords('shamray', 'Buckhead')
-#interpolateUberXRecords('shamray', 'theDUMP')
+interpolateUberXRecords('jb3', 'Buckhead')
+interpolateUberXRecords('jb3', 'theDUMP')
+interpolateUberXRecords('shamray', 'Buckhead')
+interpolateUberXRecords('shamray', 'theDUMP')
 
 ## Populate Mean Data Table
 initUberXMeanTable('jb3', 'Buckhead')
