@@ -28,7 +28,7 @@ for dbconninfo in databases:
 # End
 
 ## Create New Database
-db_create(db_connect(URL(**settings.AWS_DATABASE)))
+#db_create(db_connect(URL(**settings.AWS_DATABASE)))
 
 ## Migrate Data
 #transferLocations(sessions)
@@ -36,19 +36,19 @@ db_create(db_connect(URL(**settings.AWS_DATABASE)))
 #transferSample(sessions)
 
 ## Init Day/Time Interval Tabl
-initDayTimeIntervalTable()
+#initDayTimeIntervalTable()
 
 ## Populate uberX Data Table
-#interpolateUberXRecords('jb3', 'Buckhead')
-#interpolateUberXRecords('jb3', 'theDUMP')
-#interpolateUberXRecords('shamray', 'Buckhead')
-#interpolateUberXRecords('shamray', 'theDUMP')
+interpolateUberXRecords('jb3', 'Buckhead')
+interpolateUberXRecords('jb3', 'theDUMP')
+interpolateUberXRecords('shamray', 'Buckhead')
+interpolateUberXRecords('shamray', 'theDUMP')
 
 ## Populate Mean Data Table
-#initUberXMeanTable('jb3', 'Buckhead')
-#initUberXMeanTable('jb3', 'theDUMP')
-#initUberXMeanTable('shamray', 'Buckhead')
-#initUberXMeanTable('shamray', 'theDUMP')
+initUberXMeanTable('jb3', 'Buckhead')
+initUberXMeanTable('jb3', 'theDUMP')
+initUberXMeanTable('shamray', 'Buckhead')
+initUberXMeanTable('shamray', 'theDUMP')
 
 print "Success"
 # End

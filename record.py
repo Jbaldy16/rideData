@@ -23,19 +23,6 @@ def addFareEstimate(start, end, timezone, newSurge, newHigh, newLow, newMin, new
     session.add(new_fare_estimate)
     session.commit()
 
-######### Remove Block #########
-def addUberX(start, end, timezone, newSurge, newHigh, newLow, newMin, newDistance, newDuration):
-    utc_time = defineUTC(datetime.datetime.utcnow())
-    timeZoneDelta = getTimeZoneOffset(timezone)
-    new_fare_estimate = UberXData(start_location_id=start, end_location_id=end, surge=newSurge, \
-        highEstimate=newHigh, lowEstimate=newLow, minimum=newMin, distance=newDistance, \
-        duration=newDuration, timestamp = utc_time , \
-        timestamp_interval=defineUTC(roundTime(datetime.datetime.utcnow())), \
-        timestamp_interval_EST=roundTime(datetime.datetime.utcnow())-timeZoneDelta)
-    session.add(new_fare_estimate)
-    session.commit()
-######### Remove Block #########
-
 def addUberPOOLFareEstimate(start, end, timezone, newSurge, newHigh, newLow, newEstimate, newDistance, newDuration, newService):
     utc_time = defineUTC(datetime.datetime.utcnow())
     timeZoneDelta = getTimeZoneOffset(timezone)
@@ -61,12 +48,6 @@ def pullRecordUber(startLoc, endLoc):
     for items in uberServices:
         currentData = requestUberData(items, start_location.latitude, start_location.longitude, \
             end_location.latitude, end_location.longitude)
-######### Remove Block #########
-        #if items == 'uberX':
-            #addUberX(start_location.id, end_location.id, start_location.timezone, currentData['surge'], \
-                #currentData['highEstimate'], currentData['lowEstimate'], currentData['minimum'], \
-                #currentData['distance'], currentData['duration'])
-######### Remove Block #########
         if checkForFareChange(start_location.id, end_location.id, items, currentData):
             if currentData['minimum'] == None:
                 addUberPOOLFareEstimate(start_location.id, end_location.id, start_location.timezone, currentData['surge'], \
