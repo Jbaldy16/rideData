@@ -48,7 +48,7 @@ def initUberXMeanTable(startLoc, endLoc):
 			filter(UberXMean.start_location_id==start_location.id). \
 			filter(UberXMean.end_location_id==end_location.id).first()
 
-		print uberXMean_record.id
+		print uberXEntry.id
 
 		if uberXMean_record == None:
 			# No current Mean records exists for that timestamp and route
