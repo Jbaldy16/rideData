@@ -3,11 +3,8 @@ import settings
 import datetime
 from pytz import timezone
 
-from database_cleanup import roundTime, defineUTC
-from database_schema import session, DayTimeIntervals, UberXMedian, UberXData, Locations, RideData
-
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.engine.url import URL
+from database_schema import session, DayTimeIntervals, UberXMean, UberXData, Locations, RideData
+from utils import averageData, roundTime, defineUTC
 
 def initDayTimeIntervalTable():
 	Weekdays = ['Monday',
@@ -32,7 +29,7 @@ def initDayTimeIntervalTable():
 			j = j + 1
 		dayIndex = dayIndex + 1
 
-def initUberXMedianTable(startLoc, endLoc):
+def initUberXMeanTable(startLoc, endLoc):
 	start_location = session.query(Locations).filter(Locations.name == startLoc).one()
 	end_location = session.query(Locations).filter(Locations.name == endLoc).one()
 
@@ -47,56 +44,42 @@ def initUberXMedianTable(startLoc, endLoc):
 		dayTimeInterval_record = session.query(DayTimeIntervals).filter(DayTimeIntervals.day_index==weekday_index). \
 			filter(DayTimeIntervals.time_interval==time).first()
 
-		uberXMedian_record = session.query(UberXMedian).filter(UberXMedian.day_time_interval_id==dayTimeInterval_record.id). \
-			filter(UberXMedian.start_location_id==start_location.id). \
-			filter(UberXMedian.end_location_id==end_location.id).first()
+		uberXMean_record = session.query(UberXMean).filter(UberXMean.day_time_interval_id==dayTimeInterval_record.id). \
+			filter(UberXMean.start_location_id==start_location.id). \
+			filter(UberXMean.end_location_id==end_location.id).first()
 
-		if uberXMedian_record == None:
-			# No current Median records exists for that timestamp and route
-			new_uberX_median = UberXMedian(start_location_id=start_location.id, end_location_id=end_location.id, \
+		if uberXMean_record == None:
+			# No current Mean records exists for that timestamp and route
+			new_uberX_mean = UberXMean(start_location_id=start_location.id, end_location_id=end_location.id, \
 			surge=uberXEntry.surge, highEstimate=uberXEntry.highEstimate, lowEstimate=uberXEntry.lowEstimate, \
 			minimum=uberXEntry.minimum, distance=uberXEntry.distance, duration=uberXEntry.duration,  \
 			day_time_interval_id= dayTimeInterval_record.id, data_points=1 )
-			session.add(new_uberX_median)
+			session.add(new_uberX_mean)
 			session.commit()
 			print 'Added New Record'
 		else:
 			# Update Surge
-			uberXMedian_record.surge = averageData(uberXMedian_record.surge, uberXMedian_record.data_points, uberXEntry.surge)
+			uberXMean_record.surge = averageData(uberXMean_record.surge, uberXMean_record.data_points, uberXEntry.surge)
 			session.commit()
 			# Update highEstimate
-			uberXMedian_record.highEstimate = averageData(uberXMedian_record.highEstimate, uberXMedian_record.data_points, uberXEntry.highEstimate)
+			uberXMean_record.highEstimate = averageData(uberXMean_record.highEstimate, uberXMean_record.data_points, uberXEntry.highEstimate)
 			session.commit()
 			# Update lowEstimate
-			uberXMedian_record.lowEstimate = averageData(uberXMedian_record.lowEstimate, uberXMedian_record.data_points, uberXEntry.lowEstimate)
+			uberXMean_record.lowEstimate = averageData(uberXMean_record.lowEstimate, uberXMean_record.data_points, uberXEntry.lowEstimate)
 			session.commit()
 			# Update Minimum
-			uberXMedian_record.minimum = averageData(uberXMedian_record.minimum, uberXMedian_record.data_points, uberXEntry.minimum)
+			uberXMean_record.minimum = averageData(uberXMean_record.minimum, uberXMean_record.data_points, uberXEntry.minimum)
 			session.commit()
 			# Update Distance
-			uberXMedian_record.distance = averageData(uberXMedian_record.distance, uberXMedian_record.data_points, uberXEntry.distance)
+			uberXMean_record.distance = averageData(uberXMean_record.distance, uberXMean_record.data_points, uberXEntry.distance)
 			session.commit()
 			# Update Duration
-			uberXMedian_record.duration = averageData(uberXMedian_record.duration, uberXMedian_record.data_points, uberXEntry.duration)
+			uberXMean_record.duration = averageData(uberXMean_record.duration, uberXMean_record.data_points, uberXEntry.duration)
 			session.commit()
 			# Update Data Points
-			uberXMedian_record.data_points = uberXMedian_record.data_points + 1
+			uberXMean_record.data_points = uberXMean_record.data_points + 1
+			session.commit()
 			print 'Updated Record'
-
-
-def averageData(cur_average, cur_data_points, new_value):
-		if cur_average == None and new_value == None:
-			return None
-		elif new_value == None:
-			return cur_average
-		elif cur_average == None:
-			return new_value
-		else:
-			current_sum = cur_average * cur_data_points
-			new_sum = current_sum + new_value
-			new_data_points = cur_data_points + 1
-			new_average = new_sum / new_data_points
-			return new_average
 
 def interpolateUberXRecords(startLoc, endLoc):
 	start_location = session.query(Locations).filter(Locations.name == startLoc).one()
@@ -148,6 +131,6 @@ def addUberXRecord(recordClass, interval=None):
 
 #interpolateUberXRecords('jb3', 'Buckhead')
 
-initUberXMedianTable('jb3', 'Buckhead')
+#initUberXMeanTable('jb3', 'Buckhead')
 
-#initDayTimeIntervalTable(session)
+#initDayTimeIntervalTable()

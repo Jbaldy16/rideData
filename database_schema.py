@@ -2,7 +2,7 @@ import settings
 
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey, Time
+from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey, Time, Boolean
 from sqlalchemy.engine.url import URL
 from sqlalchemy.orm import sessionmaker
 
@@ -24,6 +24,7 @@ class Routes(Base):
     start_location_id = Column(Integer, ForeignKey('locations.id'), nullable=False)
     end_location_id = Column(Integer, ForeignKey('locations.id'), nullable=False)
     name = Column(String, nullable=True)
+    active = Column(Boolean, nullable=False)
 
 class RideServices(Base):
     __tablename__ = "rideServices"
@@ -66,8 +67,38 @@ class UberXData(Base):
     timestamp_interval = Column(DateTime(True), nullable=False)
     timestamp_interval_EST = Column(DateTime, nullable=True)
 
-class UberXMedian(Base):
-    __tablename__ = "uberXMedian"
+class UberXMean(Base):
+    __tablename__ = "uberXMean"
+ 
+    id = Column(Integer, primary_key=True)
+    start_location_id = Column(Integer, ForeignKey('locations.id'), nullable=False)
+    end_location_id = Column(Integer, ForeignKey('locations.id'), nullable=False)
+    surge = Column(Float, nullable=False)
+    highEstimate = Column(Float, nullable=False)
+    lowEstimate = Column(Float, nullable=False)
+    minimum = Column(Float, nullable=True)
+    distance = Column(Float, nullable=False) 
+    duration = Column(Float, nullable=True)
+    day_time_interval_id = Column(Integer, ForeignKey('dayTimeIntervals.id'), nullable=False)
+    data_points = Column(Integer, nullable=False)
+
+class UberXSimpleMaximum(Base):
+    __tablename__ = "uberXSimpleMaximum"
+ 
+    id = Column(Integer, primary_key=True)
+    start_location_id = Column(Integer, ForeignKey('locations.id'), nullable=False)
+    end_location_id = Column(Integer, ForeignKey('locations.id'), nullable=False)
+    surge = Column(Float, nullable=False)
+    highEstimate = Column(Float, nullable=False)
+    lowEstimate = Column(Float, nullable=False)
+    minimum = Column(Float, nullable=True)
+    distance = Column(Float, nullable=False) 
+    duration = Column(Float, nullable=True)
+    day_time_interval_id = Column(Integer, ForeignKey('dayTimeIntervals.id'), nullable=False)
+    data_points = Column(Integer, nullable=False)
+
+class UberXSimpleMinimum(Base):
+    __tablename__ = "uberXSimpleMinimum"
  
     id = Column(Integer, primary_key=True)
     start_location_id = Column(Integer, ForeignKey('locations.id'), nullable=False)
@@ -121,4 +152,4 @@ else:
     'Not a Valid Database'
 
 # Create DB
-db_create(db_connect(URL(**settings.AWS_TEST_DATABASE)))
+#db_create(db_connect(URL(**settings.AWS_TEST_DATABASE)))

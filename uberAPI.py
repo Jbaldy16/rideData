@@ -9,38 +9,30 @@ def requestUberData(strService, Lat1, Long1, Lat2, Long2):
 	prices = response.json.get('prices')
 
 	uberData = {}
+	uberService = []
 
-	if strService == "uberPOOL":
-		uberService = prices[1]
-	elif strService == "uberX":
-		uberService = prices[0]
-	elif strService == "uberXL":
-		uberService = prices[2]
-	elif strService == "uberSELECT":
-		uberService = prices[3]
-	elif strService == "uberBLACK":
-		uberService = prices[4]
-	elif strService == "uberSUV":
-		uberService = prices[5]
-	else:
+	for service in prices:
+		if service['localized_display_name'] == strService:
+			uberService = service
+
+	if not uberService:
 		print "Incorrect Uber Service Requested"
-
-	highEstimate = float(uberService['high_estimate'])
-	lowEstimate = float(uberService['low_estimate'])
-	distance = float(uberService['distance'])
-	duration = float(uberService['duration'])
-	surge = float(uberService['surge_multiplier'])
-
-	if strService != "uberPOOL":
-		minimum = float(uberService['minimum'])
-		estimate = None
 	else:
-		minimum = None
-		estimate = float(uberService['estimate'][1:])
+		highEstimate = float(uberService['high_estimate'])
+		lowEstimate = float(uberService['low_estimate'])
+		distance = float(uberService['distance'])
+		duration = float(uberService['duration'])
+		surge = float(uberService['surge_multiplier'])
 
-	uberData = {'highEstimate': highEstimate, 'lowEstimate': lowEstimate, \
-		'minimum': minimum, 'estimate': estimate, 'distance': distance, \
-		'duration': duration, 'surge': surge}
+		if strService != "POOL":
+			minimum = float(uberService['minimum'])
+			estimate = None
+		else:
+			minimum = None
+			estimate = float(uberService['estimate'][1:])
+
+		uberData = {'highEstimate': highEstimate, 'lowEstimate': lowEstimate, \
+			'minimum': minimum, 'estimate': estimate, 'distance': distance, \
+			'duration': duration, 'surge': surge}
 
 	return uberData
-
