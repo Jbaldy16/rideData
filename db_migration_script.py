@@ -39,16 +39,16 @@ for dbconninfo in databases:
 #initDayTimeIntervalTable()
 
 ## Populate uberX Data Table
-interpolateUberXRecords('jb3', 'Buckhead')
-interpolateUberXRecords('jb3', 'theDUMP')
-interpolateUberXRecords('shamray', 'Buckhead')
-interpolateUberXRecords('shamray', 'theDUMP')
+#interpolateUberXRecords('jb3', 'Buckhead')
+#interpolateUberXRecords('jb3', 'theDUMP')
+#interpolateUberXRecords('shamray', 'Buckhead')
+#interpolateUberXRecords('shamray', 'theDUMP')
 
 ## Populate Mean Data Table
-#initUberXMeanTable('jb3', 'Buckhead')
-#initUberXMeanTable('jb3', 'theDUMP')
-#initUberXMeanTable('shamray', 'Buckhead')
-#initUberXMeanTable('shamray', 'theDUMP')
+initUberXMeanTable('jb3', 'Buckhead')
+initUberXMeanTable('jb3', 'theDUMP')
+initUberXMeanTable('shamray', 'Buckhead')
+initUberXMeanTable('shamray', 'theDUMP')
 
 print "Success"
 # End
