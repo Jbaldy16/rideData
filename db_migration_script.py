@@ -28,21 +28,21 @@ for dbconninfo in databases:
 # End
 
 ## Create New Database
-db_create(db_connect(URL(**settings.AWS_TEST_DATABASE)))
+#db_create(db_connect(URL(**settings.AWS_TEST_DATABASE)))
 
 ## Migrate Data
 #transferLocations(sessions)
-transferRideData(sessions)
+#transferRideData(sessions)
 #transferSample(sessions)
 
 ## Init Day/Time Interval Tabl
-initDayTimeIntervalTable()
+#initDayTimeIntervalTable()
 
 ## Populate uberX Data Table
-#interpolateUberXRecords('jb3', 'Buckhead')
-#interpolateUberXRecords('jb3', 'theDUMP')
-#interpolateUberXRecords('shamray', 'Buckhead')
-#interpolateUberXRecords('shamray', 'theDUMP')
+interpolateUberXRecords('jb3', 'Buckhead')
+interpolateUberXRecords('jb3', 'theDUMP')
+interpolateUberXRecords('shamray', 'Buckhead')
+interpolateUberXRecords('shamray', 'theDUMP')
 
 ## Populate Mean Data Table
 #initUberXMeanTable('jb3', 'Buckhead')
