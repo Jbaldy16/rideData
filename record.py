@@ -131,29 +131,19 @@ def updateUberXMean(start_loc_id, end_loc_id, dayTimeInterval_id, uberXEntry):
         # Update Surge
         print uberXMean_record.surge, uberXMean_record.data_points
         uberXMean_record.surge = averageData(uberXMean_record.surge, uberXMean_record.data_points, uberXEntry['surge'])
-        session.commit()
         print uberXMean_record.surge
         # Update highEstimate
         uberXMean_record.highEstimate = averageData(uberXMean_record.highEstimate, uberXMean_record.data_points, uberXEntry['highEstimate'])
-        session.commit()
         # Update lowEstimate
         uberXMean_record.lowEstimate = averageData(uberXMean_record.lowEstimate, uberXMean_record.data_points, uberXEntry['lowEstimate'])
-        session.commit()
         # Update Minimum
         uberXMean_record.minimum = averageData(uberXMean_record.minimum, uberXMean_record.data_points, uberXEntry['minimum'])
-        session.commit()
         # Update Distance
         uberXMean_record.distance = averageData(uberXMean_record.distance, uberXMean_record.data_points, uberXEntry['distance'])
-        session.commit()
         # Update Duration
         uberXMean_record.duration = averageData(uberXMean_record.duration, uberXMean_record.data_points, uberXEntry['duration'])
-        session.commit()
         # Update Data Points
         uberXMean_record.data_points = uberXMean_record.data_points + 1
         session.commit()
         print uberXMean_record.data_points
         print 'Updated Record'
-
-
-# Execute
-#updateUberXData('jb3', 'Buckhead')
