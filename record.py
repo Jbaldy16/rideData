@@ -110,7 +110,6 @@ def updateUberXData(startLoc, endLoc):
     dayTimeInterval_record = session.query(DayTimeIntervals).filter(DayTimeIntervals.day_index==weekday_index). \
         filter(DayTimeIntervals.time_interval==time).first()
 
-    print dayTimeInterval_record.id
     updateUberXMean(start_location.id, end_location.id, dayTimeInterval_record.id, uberXEntry)
 
 def updateUberXMean(start_loc_id, end_loc_id, dayTimeInterval_id, uberXEntry):
@@ -129,9 +128,7 @@ def updateUberXMean(start_loc_id, end_loc_id, dayTimeInterval_id, uberXEntry):
         print 'Added New Record'
     else:
         # Update Surge
-        print uberXMean_record.surge, uberXMean_record.data_points
         uberXMean_record.surge = averageData(uberXMean_record.surge, uberXMean_record.data_points, uberXEntry['surge'])
-        print uberXMean_record.surge
         # Update highEstimate
         uberXMean_record.highEstimate = averageData(uberXMean_record.highEstimate, uberXMean_record.data_points, uberXEntry['highEstimate'])
         # Update lowEstimate
@@ -145,5 +142,4 @@ def updateUberXMean(start_loc_id, end_loc_id, dayTimeInterval_id, uberXEntry):
         # Update Data Points
         uberXMean_record.data_points = uberXMean_record.data_points + 1
         session.commit()
-        print uberXMean_record.data_points
         print 'Updated Record'

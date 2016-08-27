@@ -48,8 +48,6 @@ def initUberXMeanTable(startLoc, endLoc):
 			filter(UberXMean.start_location_id==start_location.id). \
 			filter(UberXMean.end_location_id==end_location.id).first()
 
-		print uberXEntry.id
-
 		if uberXMean_record == None:
 			# No current Mean records exists for that timestamp and route
 			new_uberX_mean = UberXMean(start_location_id=start_location.id, end_location_id=end_location.id, \
@@ -121,12 +119,3 @@ def addUberXRecord(recordClass, interval=None):
 		timestamp_interval_EST=recordClass.timestamp_interval_EST+interval)
 	session.add(new_fare_estimate)
 	session.commit()
-
-
-#Execute#
-
-#interpolateUberXRecords('jb3', 'Buckhead')
-
-#initUberXMeanTable('jb3', 'Buckhead')
-
-#initDayTimeIntervalTable()
